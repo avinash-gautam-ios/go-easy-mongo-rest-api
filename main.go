@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/avinash-gautam-ios/go-easy-mongo-rest-api/controllers"
 	"github.com/julienschmidt/httprouter"
@@ -32,7 +33,10 @@ func main() {
 	r.DELETE("/user", uc.DeleteAllUsers)
 
 	/// start the server
-	port := ":8080"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8080"
+	}
 	// start and listen for error if failed to start
 	err := http.ListenAndServe(port, r)
 	if err != nil {
@@ -48,7 +52,10 @@ func main() {
 }
 
 func getMongoClient(ctx context.Context) *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
+	//localURI := mongodb://localhost:27017/
+	dbURI := "mongodb+srv://iosavinashgautam:avinashgautam@freeclusterarthbook.heskzx7.mongodb.net/?retryWrites=true&w=majority"
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	clientOptions := options.Client().ApplyURI(dbURI).SetServerAPIOptions(serverAPI)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		panic(err)
