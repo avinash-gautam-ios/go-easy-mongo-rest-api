@@ -35,10 +35,10 @@ func main() {
 	/// start the server
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = ":8080"
+		port = "8080"
 	}
 	// start and listen for error if failed to start
-	err := http.ListenAndServe(port, r)
+	err := http.ListenAndServe(":"+port, r)
 	if err != nil {
 		panic(err)
 	}
